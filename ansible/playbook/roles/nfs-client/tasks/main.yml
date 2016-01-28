@@ -1,0 +1,3 @@
+---
+- include: nfs-client.yml
+  when: development_vm.nfs_client is defined

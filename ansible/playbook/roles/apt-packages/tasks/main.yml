@@ -1,0 +1,3 @@
+---
+- include: apt-packages.yml
+  when: development_vm.apt_packages is defined

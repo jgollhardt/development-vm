@@ -1,0 +1,3 @@
+---
+- include: composer-global-packages.yml
+  when: development_vm.composer_global_packages is defined

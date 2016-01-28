@@ -1,0 +1,3 @@
+---
+- include: deb-packages.yml
+  when: development_vm.deb_packages is defined
