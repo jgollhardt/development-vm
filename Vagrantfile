@@ -35,23 +35,19 @@ Vagrant.configure(2) do |config|
   end
   
   # Install apt packages
-  config.vm.provision "shell" do |bash|
-    bash.path = "vagrant-shell-provisioner/packages/apt-get/install.sh"
-    bash.args = ["git", "python", "python-dev"]
-  end
-  # Install pip
-  config.vm.provision "shell" do |bash|
-    bash.path = "vagrant-shell-provisioner/packages/pip/pip_install.sh"
+  config.vm.provision "shell" do |s|
+    s.path = "vagrant-shell-provisioner/packages/apt-get/install.sh"
+    s.args = ["git", "python", "python-dev", "python-pip"]
   end
   # Install pip packages
-  config.vm.provision "shell" do |bash|
-    bash.path = "vagrant-shell-provisioner/packages/pip/install.sh"
-    bash.args = ["paramiko", "pyyaml", "jinja2", "markupsafe", "ansible==1.9.4"]
+  config.vm.provision "shell" do |s|
+    s.path = "vagrant-shell-provisioner/packages/pip/install.sh"
+    s.args = ["paramiko", "pyyaml", "jinja2", "markupsafe", "ansible==1.9.4"]
   end
   # Apply Ansible playbook from the guest
-  config.vm.provision "shell" do |bash|
-    bash.path = "vagrant-shell-provisioner/config-management/ansible/ansible-playbook.sh"
-    bash.args = [
+  config.vm.provision "shell" do |s|
+    s.path = "vagrant-shell-provisioner/config-management/ansible/ansible-playbook.sh"
+    s.args = [
       # Ansible working directory on the guest
       "/vagrant/ansible",
       # Playbooks
