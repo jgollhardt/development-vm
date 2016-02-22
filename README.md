@@ -6,51 +6,36 @@
 
 ## Prerequisites 
 * [Git](https://git-scm.com/)
-* Powershell
+* [Virtualbox](https://www.virtualbox.org/)
 * [Vagrant](https://www.vagrantup.com)
-* [vagrant-guest_ansible Provisioner](https://github.com/vovimayhem/vagrant-guest_ansible)
 
 ## Setup
 * First off decide where you will store your development VM checkout and configuration. 
-  I usually create a new directory in a dedicated VM directory named after the new VM
-  I am about to create.
+  I usually create a dedicated VM directory for all my virtual machines.
   ```powershell
   E:\vm> 
-  New-Item -ItemType Directory -Name SOMEVM-VM-NAME
-  cd .\SOMEVM-VM-NAME\
   ```
 
-* Clone the project.  I recommend using a sparse checkout to avoid getting 
-  extraneous project files.
+* Clone the project.  I typically clone into a directory named after the hostname of the VM I am creating.
   ```powershell
-  E:\vm\SOMEVM-VM-NAME>
-  git init
-  git remote add -f origin git@github.com:bstoots/shantytown.git
-  # Or use this if you don't have a Github account:
-  # git remote add -f origin git://github.com/bstoots/shantytown.git
-  git config core.sparsecheckout true
-  Write-Output "development-vm"| Out-File -Encoding ascii .\.git\info\sparse-checkout
-  git pull origin master
-  cd .\development-vm\
+  E:\vm>
+  git clone git@github.com:bstoots/development-vm.git development-vm.localhost
+  git submodule update --init
   ```
 
 * Before you can actually bring up the VM you will need to define a couple of configuration
-  files.  These files are vagrant_config.yml and ansible_config.yml.  Their specific
-  formats and values are defined below but make sure you have these defined before continuing.
+  files.  Their specific formats and values are defined below but make sure you have these 
+  defined before continuing.
   ```powershell
-  E:\vm\SOMEVM-VM-NAME\development-vm> ls
-  ...
-  Mode                LastWriteTime     Length Name
-  ----                -------------     ------ ----
-  -a---         9/22/2015     10:20       1937 ansible_config.yml
-  ...
-  -a---         9/22/2015     10:21        451 vagrant_config.yml
-  ...
+  E:\vm\development-vm.localhost>
+  cp vagrant_config.yml.dist vagrant_config.yml
+  cp ansible/master.yml.dist ansible/master.yml
+  cp ansible/extra_vars.yml.dist ansible/extra_vars.yml
   ```
 
 * Once your configs are defined all you have to do is bring up the VM
   ```powershell
-  E:\vm\SOMEVM-VM-NAME\development-vm>
+  E:\vm\development-vm.localhost>
   vagrant up
   ```
 
@@ -58,17 +43,18 @@
   you encounter configuration related errors during provisioning you can fix them and 
   try again as follows:
   ```powershell
-  E:\vm\SOMEVM-VM-NAME\development-vm>
+  E:\vm\development-vm.localhost>
   vagrant provision
   ```
 
 ## Troubleshooting
 
 ## Config
-vagrant_config.yml and ansible_config.yml are YAML files containing hashes that define
-various config options for vagrant and ansible provisioning.
 
 ### vagrant_config.yml
+
+Defines variables used in Vagrantfile.
+
 ```yaml
 ---
 config:
@@ -86,12 +72,27 @@ config:
   This was added to support networking rules on persistent machines.  Must be a valid MAC
   address, auto, or omitted.
 
-### ansible_config.yml
+### master.yml
+
+Defines which Ansible plays will be run on the development VM.
+
 ```yaml
 ---
-config:
-  development_vm:
-    # See Roles for valid config options
+- hosts: localhost
+# - include: playbook/someplay.yml
+...
+```
+
+Uncomment the playbooks you would like to apply.
+
+### extra_vars.yml
+
+Defines variables used during Ansible provisioning.
+
+```yaml
+---
+development_vm:
+  # See Roles for valid config options
 ```
 
 ## Roles
