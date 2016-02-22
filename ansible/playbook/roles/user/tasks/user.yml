@@ -35,5 +35,5 @@
   when: development_vm.user.uid is not defined
 # Install an SSH key for the user if specified
 - name: install user SSH key
-  action: "authorized_key user={{ username | mandatory }} key={{development_vm.user.sshkey}}"
+  action: authorized_key user={{ development_vm.user.username | mandatory }} key="{{development_vm.user.sshkey}}"
   when: development_vm.user.sshkey is defined
