@@ -29,12 +29,15 @@ Vagrant.configure(2) do |config|
   config.vm.network "private_network", type: "dhcp", auto_config: true
   # Virtualbox specific config
   config.vm.provider "virtualbox" do |vb|
-    vb.gui = false
-    vb.memory = "2048"
+    vb.gui = vagrant_config.key?("gui") ? vagrant_config['gui'] : false
+    vb.memory = vagrant_config.key?("memory") ? vagrant_config['memory'] : 1024
     vb.name = vagrant_config['vmname']
   end
   
   # Install apt packages
+  config.vm.provision "shell" do |s|
+    s.path = "vagrant-shell-provisioner/packages/apt-get/update.sh"
+  end
   config.vm.provision "shell" do |s|
     s.path = "vagrant-shell-provisioner/packages/apt-get/install.sh"
     s.args = ["git", "python", "python-dev", "python-pip"]
@@ -42,7 +45,7 @@ Vagrant.configure(2) do |config|
   # Install pip packages
   config.vm.provision "shell" do |s|
     s.path = "vagrant-shell-provisioner/packages/pip/install.sh"
-    s.args = ["paramiko", "pyyaml", "jinja2", "markupsafe", "ansible==1.9.4"]
+    s.args = ["paramiko", "pyyaml", "jinja2", "markupsafe", "ansible"]
   end
   # Apply Ansible playbook from the guest
   config.vm.provision "shell" do |s|

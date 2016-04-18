@@ -58,10 +58,12 @@ Defines variables used in Vagrantfile.
 ```yaml
 ---
 config:
-  hostname: 
-  vmname: 
-  sshport: 
-  publicmac: 
+  hostname: development-vm.local
+  vmname: development-vm
+  sshport: 22222
+  publicmac: DEADBEEF1234
+  memory: 2048
+  gui: (true|false)
 ```
 
 * **hostname**: _(Required)_ Value of the config.vm.hostname option.  Any valid hostname.
@@ -71,6 +73,8 @@ config:
 * **publicmac**: _(Optional)_ Allows explicitly setting MAC address on public adapter.
   This was added to support networking rules on persistent machines.  Must be a valid MAC
   address, auto, or omitted.
+* **memory**: _(Optional)_ How much memory to give this VM (in MB).
+* **gui**: _(Optional)_ True to start with a visible VM GUI.  False to run in headless mode.
 
 ### master.yml
 
