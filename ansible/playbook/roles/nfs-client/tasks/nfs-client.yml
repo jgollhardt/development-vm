@@ -8,9 +8,9 @@
   become: true
   become_user: root
   action: file
-    path="{{item.key | mandatory}}"
-    owner="{{development_vm.user.username | mandatory}}"
-    group="{{development_vm.user.username | mandatory}}"
+    path={{item.key | mandatory}}
+    owner={{development_vm.user.username | mandatory}}
+    group={{development_vm.user.username | mandatory}}
     state=directory
   when: development_vm.nfs_client is defined
   with_dict: "{{ development_vm.nfs_client | default({}) }}"
@@ -18,10 +18,10 @@
   become: true
   become_user: root
   action: mount 
-    name="{{item.key | mandatory}}"
-    src="{{item.value.server | mandatory}}":{{item.value.export | mandatory}}
+    name={{item.key | mandatory}}
+    src={{item.value.server | mandatory}}:{{item.value.export | mandatory}}
     fstype=nfs
-    opts="{{item.value.options | default("rw,tcp,nolock") }}"
+    opts={{item.value.options | default("rw,tcp,nolock") }}
     state=mounted
   when: development_vm.nfs_client is defined
   with_dict: "{{ development_vm.nfs_client | default({}) }}"
