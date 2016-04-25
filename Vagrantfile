@@ -30,6 +30,7 @@ Vagrant.configure(2) do |config|
     vb.gui = vagrant_config.key?("gui") ? vagrant_config['gui'] : false
     vb.memory = vagrant_config.key?("memory") ? vagrant_config['memory'] : 1024
     vb.name = vagrant_config['vmname']
+    vb.customize ["modifyvm", :id, "--vram", "128"]
   end
   
   # Install apt packages
