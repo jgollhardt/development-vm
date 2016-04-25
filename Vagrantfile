@@ -37,6 +37,9 @@ Vagrant.configure(2) do |config|
     s.path = "vagrant-shell-provisioner/packages/apt-get/update.sh"
   end
   config.vm.provision "shell" do |s|
+    s.path = "vagrant-shell-provisioner/packages/apt-get/upgrade.sh"
+  end
+  config.vm.provision "shell" do |s|
     s.path = "vagrant-shell-provisioner/packages/apt-get/install.sh"
     s.args = ["git", "python", "python-dev", "python-pip"]
   end
