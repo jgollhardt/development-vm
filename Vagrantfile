@@ -9,9 +9,7 @@ vconfig        = YAML.load_file("#{current_dir}/vagrant_config.yml")
 vagrant_config = vconfig['config']
 
 Vagrant.configure(2) do |config|
-  # Ubuntu 14.04 LTS "Trusty Tahr"
-  config.vm.box = "ubuntu/trusty64"
-  config.vm.box_version = "20160120.0.1"
+  config.vm.box = "bstoots/xubuntu-16.04-desktop-amd64"
   # Set hostname and vagrant name
   config.vm.hostname = vagrant_config['hostname']
   config.vm.define vagrant_config['vmname'].to_sym do |name_config| end
@@ -21,12 +19,12 @@ Vagrant.configure(2) do |config|
   end
   # Stand up a bridged adapter so we can talk to NFS
   if vagrant_config.key?("publicmac")
-    config.vm.network "public_network", :mac => vagrant_config['publicmac'], auto_config: true
+    config.vm.network "public_network", :mac => vagrant_config['publicmac'], auto_config: false
   else
-    config.vm.network "public_network", auto_config: true
+    config.vm.network "public_network", auto_config: false
   end
   # Stand up a private adapter so we can talk to other local boxes
-  config.vm.network "private_network", type: "dhcp", auto_config: true
+  config.vm.network "private_network", type: "dhcp", auto_config: false
   # Virtualbox specific config
   config.vm.provider "virtualbox" do |vb|
     vb.gui = vagrant_config.key?("gui") ? vagrant_config['gui'] : false
