@@ -2,6 +2,8 @@
 # Tasks for nfs-client
 - name: install required apt packages
   action: apt pkg=nfs-common state=present
+  become: true
+  become_user: root
 - name: start and enable rpcbind
   action: service name=rpcbind state=started enabled=yes
 - name: create NFS mount point 
