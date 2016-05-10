@@ -33,10 +33,12 @@ Vagrant.configure(2) do |config|
     vb.customize ["modifyvm", :id, "--vram", "128"]
   end
   
-  # Install apt packages
+  # Update using aptdcon which will block in the event the system is already in the process
+  # of updating (this might take a while)
   config.vm.provision "shell" do |s|
-    s.path = "vagrant-shell-provisioner/packages/apt-get/update.sh"
+    s.path = "vagrant-shell-provisioner/packages/aptdcon/refresh.sh"
   end
+  # Upgrade and install as per usual with apt-get
   config.vm.provision "shell" do |s|
     s.path = "vagrant-shell-provisioner/packages/apt-get/upgrade.sh"
   end
