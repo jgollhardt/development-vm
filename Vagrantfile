@@ -42,7 +42,7 @@ Vagrant.configure(2) do |config|
   end
   config.vm.provision "shell" do |s|
     s.path = "vagrant-shell-provisioner/packages/apt-get/install.sh"
-    s.args = ["git", "python", "python-dev", "python-pip"]
+    s.args = ["git", "python", "python-dev", "python-pip", "libffi-dev", "libssl-dev"]
   end
   # Install pip packages
   config.vm.provision "shell" do |s|
