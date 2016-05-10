@@ -4,3 +4,5 @@ config:
   vmname: 
   sshport: 
   publicmac: auto
+  memory: 2048
+  gui: (true|false)
