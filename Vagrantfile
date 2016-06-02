@@ -13,6 +13,7 @@ Vagrant.configure(2) do |config|
     config.vm.box = "geerlingguy/centos7"
   else
     config.vm.box = "bstoots/xubuntu-16.04-desktop-amd64"
+  end
   # Set hostname and vagrant name
   config.vm.hostname = vagrant_config['hostname']
   config.vm.define vagrant_config['vmname'].to_sym do |name_config| end
@@ -42,25 +43,28 @@ Vagrant.configure(2) do |config|
     config.vm.provision "shell" do |s|
       s.path = "vagrant-shell-provisioner/packages/aptdcon/refresh.sh"
     end
+  end
   # Upgrade and install as per usual with apt-get or yum
   config.vm.provision "shell" do |s|    
     if vagrant_config['distro'] == 'centos'
       s.path = "vagrant-shell-provisioner/packages/yum/upgrade.sh"
     else
       s.path = "vagrant-shell-provisioner/packages/apt-get/upgrade.sh"
+    end
   end
   config.vm.provision "shell" do |s|
     if vagrant_config['distro'] == 'centos'
       s.path = "vagrant-shell-provisioner/packages/yum/install.sh"
-      s.args = ["git", "python", "python-devel", "python-pip", "libffi-devel"]
+      s.args = ["python", "python-devel", "python-pip", "libffi-devel"]
     else
       s.path = "vagrant-shell-provisioner/packages/apt-get/install.sh"
       s.args = ["git", "python", "python-dev", "python-pip", "libffi-dev", "libssl-dev"]
+    end
   end
   # Install pip packages
   config.vm.provision "shell" do |s|
     s.path = "vagrant-shell-provisioner/packages/pip/install.sh"
-    s.args = ["paramiko", "pyyaml", "jinja2", "markupsafe", "ansible"]
+    s.args = ["paramiko", "pyyaml", "jinja2", "markupsafe", "ansible==2.0.2.0"]
   end
   # Apply Ansible playbook from the guest
   config.vm.provision "shell" do |s|
@@ -85,6 +89,7 @@ Vagrant.configure(2) do |config|
         # Options
         "-v"
       ]
+    end
   end
 
   # Just kidding, ansible_local isn't working on Windows hosts as of 01/27/2016 ... maybe some day
