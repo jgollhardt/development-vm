@@ -1,3 +1,3 @@
 [submodule "vagrant-shell-provisioner"]
 	path = vagrant-shell-provisioner
-	url = git@github.com:bstoots/vagrant-shell-provisioner.git
+	url = git@github.com:BigJ64/vagrant-shell-provisioner.git
