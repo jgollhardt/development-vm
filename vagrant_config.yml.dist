@@ -6,3 +6,5 @@ config:
   publicmac: auto
   memory: 2048
   gui: (true|false)
+  distro: (xubuntu|centos)
+  type: (dev|frogerock)

@@ -9,7 +9,10 @@ vconfig        = YAML.load_file("#{current_dir}/vagrant_config.yml")
 vagrant_config = vconfig['config']
 
 Vagrant.configure(2) do |config|
-  config.vm.box = "bstoots/xubuntu-16.04-desktop-amd64"
+  if vagrant_config['distro'] == 'centos'
+    config.vm.box = "geerlingguy/centos7"
+  else
+    config.vm.box = "bstoots/xubuntu-16.04-desktop-amd64"
   # Set hostname and vagrant name
   config.vm.hostname = vagrant_config['hostname']
   config.vm.define vagrant_config['vmname'].to_sym do |name_config| end
@@ -33,18 +36,26 @@ Vagrant.configure(2) do |config|
     vb.customize ["modifyvm", :id, "--vram", "128"]
   end
   
-  # Update using aptdcon which will block in the event the system is already in the process
-  # of updating (this might take a while)
-  config.vm.provision "shell" do |s|
-    s.path = "vagrant-shell-provisioner/packages/aptdcon/refresh.sh"
+  if vagrant_config['distro'] != 'centos'
+    # Update using aptdcon which will block in the event the system is already in the process
+    # of updating (this might take a while)
+    config.vm.provision "shell" do |s|
+      s.path = "vagrant-shell-provisioner/packages/aptdcon/refresh.sh"
+    end
+  # Upgrade and install as per usual with apt-get or yum
+  config.vm.provision "shell" do |s|    
+    if vagrant_config['distro'] == 'centos'
+      s.path = "vagrant-shell-provisioner/packages/yum/upgrade.sh"
+    else
+      s.path = "vagrant-shell-provisioner/packages/apt-get/upgrade.sh"
   end
-  # Upgrade and install as per usual with apt-get
   config.vm.provision "shell" do |s|
-    s.path = "vagrant-shell-provisioner/packages/apt-get/upgrade.sh"
-  end
-  config.vm.provision "shell" do |s|
-    s.path = "vagrant-shell-provisioner/packages/apt-get/install.sh"
-    s.args = ["git", "python", "python-dev", "python-pip", "libffi-dev", "libssl-dev"]
+    if vagrant_config['distro'] == 'centos'
+      s.path = "vagrant-shell-provisioner/packages/yum/install.sh"
+      s.args = ["git", "python", "python-devel", "python-pip", "libffi-devel"]
+    else
+      s.path = "vagrant-shell-provisioner/packages/apt-get/install.sh"
+      s.args = ["git", "python", "python-dev", "python-pip", "libffi-dev", "libssl-dev"]
   end
   # Install pip packages
   config.vm.provision "shell" do |s|
@@ -54,16 +65,26 @@ Vagrant.configure(2) do |config|
   # Apply Ansible playbook from the guest
   config.vm.provision "shell" do |s|
     s.path = "vagrant-shell-provisioner/config-management/ansible/ansible-playbook.sh"
-    s.args = [
-      # Ansible working directory on the guest
-      "/vagrant/ansible",
-      # Playbooks
-      "master.yml",
-      # Extra vars file
-      "extra_vars.yml",
-      # Options
-      "-v"
-    ]
+    if vagrant_config['distro'] == 'centos'
+      s.args = [
+        # Ansible working directory on the guest
+        "/vagrant/forgerock/ansible",
+        # Playbooks
+        "frstack.yml",
+        # Options
+        "-v"
+      ]
+    else
+      s.args = [
+        # Ansible working directory on the guest
+        "/vagrant/ansible",
+        # Playbooks
+        "master.yml",
+        # Extra vars file
+        "extra_vars.yml",
+        # Options
+        "-v"
+      ]
   end
 
   # Just kidding, ansible_local isn't working on Windows hosts as of 01/27/2016 ... maybe some day
