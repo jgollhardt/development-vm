@@ -69,12 +69,16 @@ Vagrant.configure(2) do |config|
   # Apply Ansible playbook from the guest
   config.vm.provision "shell" do |s|
     s.path = "vagrant-shell-provisioner/config-management/ansible/ansible-playbook.sh"
-    if vagrant_config['distro'] == 'centos'
+    if vagrant_config['type'] == 'forgerock'
       s.args = [
         # Ansible working directory on the guest
         "/vagrant/forgerock/ansible",
         # Playbooks
         "frstack.yml",
+        # Extra vars file,
+        "",
+        # Inventory file,
+        "localhost.ini",
         # Options
         "-v"
       ]
@@ -86,6 +90,8 @@ Vagrant.configure(2) do |config|
         "master.yml",
         # Extra vars file
         "extra_vars.yml",
+        # Inventory file,
+        "",
         # Options
         "-v"
       ]
