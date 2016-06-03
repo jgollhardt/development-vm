@@ -78,7 +78,7 @@ Vagrant.configure(2) do |config|
         # Extra vars file,
         "",
         # Inventory file,
-        "localhost.ini",
+        "inventory/localhost.ini",
         # Options
         "-v"
       ]

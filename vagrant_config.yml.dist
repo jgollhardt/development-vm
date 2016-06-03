@@ -7,4 +7,4 @@ config:
   memory: 2048
   gui: (true|false)
   distro: (xubuntu|centos)
-  type: (dev|frogerock)
+  type: (dev|forgerock)
