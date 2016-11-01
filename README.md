@@ -203,10 +203,12 @@ java_dev_nexus is a hash defined as follows:
 ### network
 Configures network adapters according to role template
 #### Config
-None
-
+```yaml
+network:
+  gateway: ip.of.default.gateway
+```
 ### nfs-client
-Configures and mounts NFS shares.  Creates mount points if needed.
+Configures and mounts NFS shares using autofs.  Creates mount points if needed.
 #### Config
 ```yaml
 nfs_client:
@@ -253,4 +255,3 @@ user is a hash, keys are defined as follows:
 * **groups**: _(Optional)_ Additional groups for this user
 * **uid**: _(Optional)_ Any valid user id
 * **gid**: _(Optional)_ Any valid group id
-
