@@ -10,3 +10,10 @@
   notify: cycle interfaces
   # tags:
   #   - example
+
+- name: Set gateway via dhclient options
+  lineinfile: 
+    dest: /etc/dhcp/dhclient.conf
+    regexp: '^supersede routers'
+    line: 'supersede routers {{ development_vm.network.gateway }};'
+  notify: cycle interfaces
