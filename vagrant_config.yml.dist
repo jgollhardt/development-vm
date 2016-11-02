@@ -6,3 +6,4 @@ config:
   publicmac: auto
   memory: 2048
   gui: (true|false)
+  ansible_version:

@@ -57,7 +57,12 @@ Vagrant.configure(2) do |config|
   # Install pip packages
   config.vm.provision "shell" do |s|
     s.path = "vagrant-shell-provisioner/packages/pip/install.sh"
-    s.args = ["paramiko", "pyyaml", "jinja2", "markupsafe", "ansible"]
+    if vagrant_config.key?("ansible_version")
+      s.args = ["paramiko", "pyyaml", "jinja2", "markupsafe"]
+      s.args.push("ansible==" + vagrant_config['ansible_version'])
+    else
+      s.args = ["paramiko", "pyyaml", "jinja2", "markupsafe", "ansible"]
+    end
   end
   # Apply Ansible playbook from the guest
   config.vm.provision "shell" do |s|
