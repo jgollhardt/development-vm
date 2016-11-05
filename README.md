@@ -19,7 +19,7 @@
 * Clone the project.  I typically clone into a directory named after the hostname of the VM I am creating.
   ```powershell
   E:\vm>
-  git clone git@github.com:bigj64/development-vm.git development-vm.localhost
+  git clone git@github.com:bstoots/development-vm.git development-vm.localhost
   git submodule update --init
   ```
 
