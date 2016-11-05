@@ -19,7 +19,7 @@
 * Clone the project.  I typically clone into a directory named after the hostname of the VM I am creating.
   ```powershell
   E:\vm>
-  git clone git@github.com:bstoots/development-vm.git development-vm.localhost
+  git clone git@github.com:bigj64/development-vm.git development-vm.localhost
   git submodule update --init
   ```
 
@@ -64,6 +64,7 @@ config:
   publicmac: DEADBEEF1234
   memory: 2048
   gui: (true|false)
+  ansible_version: 2.2.0.0
 ```
 
 * **hostname**: _(Required)_ Value of the config.vm.hostname option.  Any valid hostname.
@@ -75,6 +76,7 @@ config:
   address, auto, or omitted.
 * **memory**: _(Optional)_ How much memory to give this VM (in MB).
 * **gui**: _(Optional)_ True to start with a visible VM GUI.  False to run in headless mode.
+* **ansible_version**: _(Optional)_ Set the version of anisble to be installed via pip.
 
 ### master.yml
 
@@ -203,10 +205,16 @@ java_dev_nexus is a hash defined as follows:
 ### network
 Configures network adapters according to role template
 #### Config
-None
+```yaml
+network:
+  gateway: ip.of.default.gateway
+```
+network is a hash defined as follows:
+
+* **gateway**: (_Optional_) IP of your prefered default gateway
 
 ### nfs-client
-Configures and mounts NFS shares.  Creates mount points if needed.
+Configures and mounts NFS shares using autofs.  Creates mount points if needed.
 #### Config
 ```yaml
 nfs_client:
@@ -235,7 +243,9 @@ timezone is a hash, keys are defined as follows:
 * **name**: (_Required_) This may be any valid tz database identifier as defined by IANA: [IANA Timezones](http://www.iana.org/time-zones).
 
 ### user
-Configures user and group
+Configures user and group.
+
+**Note**: All users created start with a default password of "password". Each user will be required to change it on first login.
 #### Config
 ```yaml
 user:
@@ -244,6 +254,7 @@ user:
   groups: bar,baz
   uid: 10000
   gid: 10000
+  sshkey: ssh-rsa <really long key here>
 ```
 
 user is a hash, keys are defined as follows:
@@ -253,4 +264,4 @@ user is a hash, keys are defined as follows:
 * **groups**: _(Optional)_ Additional groups for this user
 * **uid**: _(Optional)_ Any valid user id
 * **gid**: _(Optional)_ Any valid group id
-
+* **sshkey**: _(Optional)_ Valid ssh key public string

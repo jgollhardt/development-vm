@@ -1,31 +1,47 @@
 ---
 # Tasks for nfs-client
 - name: install required apt packages
-  action: apt pkg=nfs-common state=present
-  become: true
-  become_user: root
+  apt: pkg={{ item }} state=present
+  with_items:
+    - nfs-common
+    - autofs
+  
 - name: start and enable rpcbind
-  action: service name=rpcbind state=started enabled=yes
+  service: name=rpcbind state=started enabled=yes
+
+- name: enable autofs
+  service: name=autofs enabled=yes
+
 - name: create NFS mount point 
-  become: true
-  become_user: root
-  action: file
-    path={{item.key | mandatory}}
-    owner={{development_vm.user.username | mandatory}}
-    group={{development_vm.user.username | mandatory}}
-    state=directory
+  file:
+    path: "{{ item.key }}"
+    owner: "{{ development_vm.user.username | mandatory }}"
+    group: "{{ development_vm.user.username | mandatory }}"
+    state: directory
   when: development_vm.nfs_client is defined
   with_dict: "{{ development_vm.nfs_client | default({}) }}"
-- name: mount NFS export
-  become: true
-  become_user: root
-  action: mount 
-    name={{item.key | mandatory}}
-    src={{item.value.server | mandatory}}:{{item.value.export | mandatory}}
-    fstype=nfs
-    opts={{item.value.options | default("rw,tcp,nolock") }}
-    state=mounted
-  when: development_vm.nfs_client is defined
+
+- name: create auto.nfs
+  file:
+    path: /etc/auto.nfs
+    state: touch
+  tags:
+    - nfs-client
+- name: Add auto.nfs to auto.master
+  lineinfile:
+    dest: /etc/auto.nfs
+    regexp: '^{{ item.key }}'
+    line: '{{ item.key }} -{{ item.value.options }} {{ item.value.server }}:{{ item.value.export }}'
   with_dict: "{{ development_vm.nfs_client | default({}) }}"
+  notify: restart autofs
+  tags:
+    - nfs-client
+
+- name: Add auto.nfs to auto.master
+  lineinfile:
+    dest: /etc/auto.master
+    regexp: '^\/- \/etc\/auto.nfs'
+    line: '/- /etc/auto.nfs'
+  notify: restart autofs
   tags:
     - nfs-client

@@ -10,3 +10,6 @@
   notify: cycle interfaces
   # tags:
   #   - example
+
+- include: network-gateway.yml
+  when: development_vm.network.gateway is defined
