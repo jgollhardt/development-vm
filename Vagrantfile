@@ -35,6 +35,8 @@ Vagrant.configure(2) do |config|
     vb.memory = vagrant_config.key?("memory") ? vagrant_config['memory'] : 1024
     vb.name = vagrant_config['vmname']
     vb.customize ["modifyvm", :id, "--vram", "128"]
+    # Mitigate bug that makes the cable for the NAT adapter start unpluged
+    vb.customize ['modifyvm', :id, '--cableconnected1', 'on']
   end
   
   if vagrant_config['distro'] != 'centos'
