@@ -40,15 +40,14 @@ Vagrant.configure(2) do |config|
   # Mitigate bug that spews usless tty errors
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
   
-  # Get base packages to run the rest of the provisioners
+  # Run an apt-get update to update the package cache
+  config.vm.provision "shell" do |s|
+    s.path = "vagrant-shell-provisioner/packages/apt-get/update.sh"
+  end
+  # Get packages needed for provisioning
   config.vm.provision "shell" do |s|
     s.path = "vagrant-shell-provisioner/packages/apt-get/install.sh"
-    s.args = ["aptdaemon", "git", "python", "python-dev", "python-pip", "libffi-dev", "libssl-dev"]
-  end
-  # Update using aptdcon which will block in the event the system is already in the process
-  # of updating (this might take a while)
-  config.vm.provision "shell" do |s|
-    s.path = "vagrant-shell-provisioner/packages/aptdcon/refresh.sh"
+    s.args = ["git", "python", "python-dev", "python-pip", "libffi-dev", "libssl-dev"]
   end
   # Upgrade and install as per usual with apt-get
   config.vm.provision "shell" do |s|
