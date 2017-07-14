@@ -11,7 +11,7 @@ vagrant_config = vconfig['config']
 Vagrant.configure(2) do |config|
   # Get Bento Box from Hasicorp and lock us in to a known good version
   config.vm.box = "bento/ubuntu-16.04"
-  config.vm.box_version = "2.3.4"
+  config.vm.box_version = "2.3.7"
   # Set hostname and vagrant name
   config.vm.hostname = vagrant_config['hostname']
   config.vm.define vagrant_config['vmname'].to_sym do |name_config| end
