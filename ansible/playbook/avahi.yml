@@ -1,0 +1,7 @@
+---
+# avahi role
+- hosts: all
+  become: true
+  become_user: root
+  roles:
+    - { role: avahi }

@@ -1,0 +1,8 @@
+---
+
+- name: Adjust avahi config to allow use of .local domain
+  lineinfile:
+    dest: /etc/avahi/avahi-daemon.conf 
+    line: 'domain-name=.alocal'
+    regexp: 'domain-name'
+    state: present
