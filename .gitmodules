@@ -1,6 +1,7 @@
 [submodule "vagrant-shell-provisioner"]
 	path = vagrant-shell-provisioner
-	url = git@github.com:BigJ64/vagrant-shell-provisioner.git
+	url = https://github.com/bstoots/vagrant-shell-provisioner.git
 [submodule "forgerock"]
 	path = forgerock
-	url = git@github.com:BigJ64/frstack.git
+	url = https://github.com/jgollhardt/frstack
+	branch = forgerockin
